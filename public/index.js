@@ -1,3 +1,5 @@
+import { saveRecord } from './db'
+
 let transactions = []
 let myChart
 
