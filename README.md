@@ -4,7 +4,7 @@
 
 ## Description
 
-Budgie is a progressive web app that allows the user to track their budget online using a mongo database and offline using indexedDB. The app uses a cache first retreival strategy saving bandwidth and allows the user access to their data and update their data while offline.
+Budgie is a progressive web app that allows the user to track their budget online using a mongo database and offline using indexedDB. The app uses a cache first retrieval strategy saving bandwidth and allows the user access to their data and update their data while offline.
 
 ## Table of Contents
 
