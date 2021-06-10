@@ -78,7 +78,7 @@ request.onsuccess = (e) => {
 }
 
 // function to save to indexedDB
-export const saveRecord = record => {
+const saveRecord = record => {
   console.log('[IndexedDB] Save record invoked')
   // open transaction
   const transaction = db.transaction(['budgieStore'], 'readwrite')
