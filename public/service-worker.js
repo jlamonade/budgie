@@ -11,17 +11,24 @@ const STATIC_CACHE = 'static-cache-v1'
 const DATA_CACHE = 'data-cache-v1'
 
 // install
-self.addEventListener('install', (e) => {
-  // pre cache budget data
-  e.waitUntil(
-    caches.open(DATA_CACHE).then((cache) => cache.add('/api/transaction'))
-  )
+self.addEventListener('install', async (e) => {
+  console.log('[Service Worker] Install')
 
   // pre cache static data
-  e.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => cache.addAll(FILES_TO_CACHE))
-  )
+  e.waitUntil((async () => {
+    const staticCache = await caches.open(STATIC_CACHE)
+    console.log('[Service Worker] Caching Static Files')
 
+    const dataCache = await caches.open(DATA_CACHE)
+    console.log('[Service Worker] Caching Data')
+
+    // fetches from /api/transaction and then puts the results into the cache
+    await dataCache.add('/api/transaction')
+    // fetches all items from array and puts it into the cache
+    await staticCache.addAll(FILES_TO_CACHE)
+  })())
+
+  // allow the rest of the page to load while data caches
   self.skipWaiting()
 })
 
