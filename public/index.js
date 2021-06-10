@@ -2,10 +2,10 @@ let transactions = []
 let myChart
 
 fetch('/api/transaction')
-  .then(response => {
+  .then((response) => {
     return response.json()
   })
-  .then(data => {
+  .then((data) => {
     // save db data on global variable
     transactions = data
 
@@ -28,7 +28,7 @@ function populateTable () {
   const tbody = document.querySelector('#tbody')
   tbody.innerHTML = ''
 
-  transactions.forEach(transaction => {
+  transactions.forEach((transaction) => {
     // create and populate a table row
     const tr = document.createElement('tr')
     tr.innerHTML = `
@@ -46,13 +46,13 @@ function populateChart () {
   let sum = 0
 
   // create date labels for chart
-  const labels = reversed.map(t => {
+  const labels = reversed.map((t) => {
     const date = new Date(t.date)
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
   })
 
   // create incremental values for chart
-  const data = reversed.map(t => {
+  const data = reversed.map((t) => {
     sum += parseInt(t.value)
     return sum
   })
@@ -68,12 +68,14 @@ function populateChart () {
     type: 'line',
     data: {
       labels,
-      datasets: [{
-        label: 'Total Over Time',
-        fill: true,
-        backgroundColor: '#6666ff',
-        data
-      }]
+      datasets: [
+        {
+          label: 'Total Over Time',
+          fill: true,
+          backgroundColor: '#6666ff',
+          data
+        }
+      ]
     }
   })
 }
@@ -120,20 +122,20 @@ function sendTransaction (isAdding) {
       'Content-Type': 'application/json'
     }
   })
-    .then(response => {
+    .then((response) => {
       return response.json()
     })
-    .then(data => {
+    .then((data) => {
       if (data.errors) {
         errorEl.textContent = 'Missing Information'
       } else {
-      // clear form
+        // clear form
         nameEl.value = ''
         amountEl.value = ''
       }
     })
-    .catch(err => {
-    // fetch failed, so save in indexed db
+    .catch((err) => {
+      // fetch failed, so save in indexed db
       saveRecord(transaction)
 
       // clear form
