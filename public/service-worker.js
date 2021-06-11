@@ -48,7 +48,7 @@ self.addEventListener('activate', e => {
   self.clients.claim()
 })
 
-self.addEventListener('fetch', (e) => { // if a fetch request occurs
+self.addEventListener('fetch', (e) => { // on a fetch request
   if (e.request.url.includes('/api')) { // if the request url contains /api
     console.log('[Service Worker] Fetch (data)', e.request.url) // console log the request url
     e.respondWith( // respond with custom functionality
@@ -57,6 +57,7 @@ self.addEventListener('fetch', (e) => { // if a fetch request occurs
           .then((response) => {
             if (response.status === 200) { // if the fetch response is good
               cache.put(e.request.url, response.clone()) // put the fetched data as a clone into the cache
+              // put method will consume the response so you must use a clone
             }
             return response // return the fetch response
           })
