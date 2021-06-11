@@ -1,6 +1,6 @@
 // IndexedDB stuff here
-let db
-let budgetVersion
+let db // global db variable
+let budgetVersion // global db version
 
 // open database
 const request = indexedDB.open('budgieDB', budgetVersion || 21)
@@ -14,19 +14,21 @@ request.onupgradeneeded = (e) => {
 
   console.log(`[IndexedDB] DB Updated from version ${oldVersion} to ${newVersion}`)
 
-  db = e.target.result
+  db = e.target.result // specify db to work on globally
 
-  if (db.objectStoreNames.length === 0) {
+  if (db.objectStoreNames.length === 0) { // if there are no object stores
+    // create the object store and have an autoincrement index
     db.createObjectStore('budgieStore', { autoIncrement: true })
   }
 }
 
-// onerror handler
+// onerror handler to capture any errors
 request.onerror = (e) => {
   console.log(e.target.errorCode)
 }
 
-// function to check database
+// function to check database which is run when onsuccess is triggered
+// used to send offline indexedDB data into the backend db
 const checkDatabase = () => {
   console.log('[IndexedDB] Check DB Invoked')
 
@@ -54,6 +56,7 @@ const checkDatabase = () => {
       const res = await response.json()
       if (res.length !== 0) {
         // if response is good then clear items from obj store
+        // meaning that data was successfully sent to the backend
         transaction = db.transaction(['budgieStore'], 'readwrite')
 
         const store = transaction.objectStore('budgieStore')
@@ -65,19 +68,20 @@ const checkDatabase = () => {
   }
 }
 
-// onsuccess handler
+// onsuccess handler, if the database successfully opened
 request.onsuccess = (e) => {
   console.log('[IndexedDB] Success')
   db = e.target.result // specify pointer to indexeddb
 
   if (navigator.online) {
-    // if navigator online then check database function
+    // if navigator online/browser is connected to the backend then run checkDatabase
     console.log('[IndexedDB] Backend Online')
     checkDatabase()
   }
 }
 
-// function to save to indexedDB
+// function to save to indexedDB,
+// called on when the browser cannot fetch from the backend
 const saveRecord = record => {
   console.log('[IndexedDB] Save record invoked')
   // open transaction
@@ -90,5 +94,5 @@ const saveRecord = record => {
   store.add(record)
 }
 
-// event listener, when online check database function
+// event listener, when online run checkDatabase function
 window.addEventListener('online', checkDatabase)
